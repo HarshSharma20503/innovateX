@@ -13,11 +13,11 @@ import { sendConfirmationMail } from "../utils/SendMail.js";
  */
 export const registerUser = AsyncHandler(async (req, res) => {
   console.log("******** registerUser Function ********");
-  const { name, email, password } = req.body;
-  console.log("User details", name, email, password);
+  const { name, email, password, userType } = req.body;
+  console.log("User details", name, email, password, userType);
 
   // Validate request body
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !userType) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -36,7 +36,7 @@ export const registerUser = AsyncHandler(async (req, res) => {
   }
 
   // Create a new unverified user
-  const unverifiedUser = await UnverifiedUser.create({ name, email, password });
+  const unverifiedUser = await UnverifiedUser.create({ name, email, password, userType });
   if (!unverifiedUser) {
     throw new ApiError(500, "Failed to create User");
   }
@@ -54,6 +54,7 @@ export const registerUser = AsyncHandler(async (req, res) => {
       {
         name: unverifiedUser.name,
         email: unverifiedUser.email,
+        userType: unverifiedUser.userType
       },
       "Please verify your email to continue"
     )
@@ -85,6 +86,7 @@ export const confirmEmail = AsyncHandler(async (req, res) => {
     name: unverifiedUser.name,
     email: unverifiedUser.email,
     password: unverifiedUser.password,
+    userType: unverifiedUser.userType
   });
   if (!user) {
     throw new ApiError(500, "Failed to create User");
@@ -140,6 +142,7 @@ export const loginUser = AsyncHandler(async (req, res) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          userType: user.userType,
           token: jwtToken,
         },
         "User logged in successfully"
