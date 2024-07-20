@@ -52,6 +52,10 @@ app.use("/api/auth", authRouter);
 import userRouter from "./routes/user.routes.js";
 app.use("/api/user", userRouter);
 
+// Import and use Order routes
+import orderRouter from "./routes/order.routes.js";
+app.use("/api/order", orderRouter);
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dist", "index.html"));
 });
