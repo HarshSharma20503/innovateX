@@ -6,6 +6,35 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../config/connectCloudinary.js";
 
 export const addOrder = AsyncHandler(async (req, res) => {
+
+  //   {
+  //     "identifiers": {
+  //         "rfid": "3712",
+  //         "qr": "1002"
+  //     },
+  //     "ownership": {
+  //         "current_owner": "xyz",
+  //         "previous_owners": [],
+  //         "location": "warehouse",
+  //         "timestamp": "2024-07-20T10:00:00Z"
+  //     },
+  //     "data": {
+  //         "item": "sennheiser ie 200",
+  //         "seller": "headphone zone",
+  //         "buyer": "devanshamity@gmail.com",
+  //         "source": "mumbai",
+  //         "destination": "delhi"
+  //     },
+  //     "status": {
+  //         "delivered": false,
+  //         "paid": false
+  //     },
+  //     "tracking": []
+  // }
+
+
+
+
   const user = req.user;
   if (!user || user.userType !== "Seller") {
     throw new ApiError(400, "Invalid Operation for current user");
@@ -25,23 +54,72 @@ export const addOrder = AsyncHandler(async (req, res) => {
   // console.log(recieverUser._id);
   const track = [{ id: "669baf564f903c7d64c4161c" }, { id: "669baf994f903c7d64c4161d" }];
 
-  // Create a tsx hash
-  const tsxHash = "0x000000000000";
-  //
 
-  const order = await Order.create({
+  let order = await Order.create({
     itemName,
     to: { id: recieverUser._id },
     from: { id: user._id },
     imgUrl,
     track,
     status: "accepted",
-    tsxHash,
+    txnHash,
   });
 
   if (!order) {
     throw new ApiError(500, "Failed to create order");
   }
+
+  // Create a tsx hash
+  const nftMint = {
+    "identifiers": {
+      "rfid": "3712",
+      "qr": "1002"
+    },
+    "ownership": {
+      "current_owner": user._id,
+      "previous_owners": [],
+      "location": "warehouse",
+      "timestamp": Date.now()
+    },
+    "data": {
+      "item": itemName,
+      "seller": user.name,
+      "buyer": recieverUser.email,
+      "source": "mumbai",
+      "destination": "delhi"
+    },
+    "status": {
+      "delivered": false,
+      "paid": false
+    },
+    "tracking": []
+  };
+
+
+  const response = await fetch(`${url}/create/${order['_id']}`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: nftMint
+  })
+
+  const res = await response.json();
+
+  if (!res.success) {
+    await Order.deleteOne({ _id: order['_id'] });
+    throw new ApiError(500, "Internal Server Error!! ");
+  }
+
+  const txnHash = res.txn_Hash;
+
+  // put txnHash in order database
+  order = await Order.updateOne({ _id: order['_id'] }, {
+    txnHash: txnHash
+  })
+
+
+  //
   const updateResult1 = await User.updateOne(
     { _id: user._id },
     {
@@ -122,9 +200,16 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   }
 
   const order = await Order.findOne({ _id: orderId });
-  const tsxHash = order["tsxHash"];
+  const txnHash = order["txnHash"];
   console.log(order);
-  console.log(tsxHash);
+  console.log(txnHash);
+
+  const response = await fecth(`${url}/get/${txnHash}`, {
+    method: 'GET'
+  });
+
+  const orderDetails = response.json();
+  console.log(orderDetails);
 
   res.status(200).json(new ApiResponse(200, {}, "Order Details successfully fetched"));
 });

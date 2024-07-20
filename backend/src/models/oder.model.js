@@ -60,6 +60,9 @@ const orderSchema = new Schema(
         },
         timestamp_otp: {
             type: String
+        },
+        txnHash: {
+            type: String
         }
     },
     { timestamps: true } // Automatically add createdAt and updatedAt fields
