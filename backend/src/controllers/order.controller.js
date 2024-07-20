@@ -95,7 +95,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
     "tracking": []
   };
 
-
+  const url = process.env.GO_URL;
   const response = await fetch(`${url}/create/${order['_id']}`, {
     method: 'POST',
     headers: {
@@ -204,6 +204,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   console.log(order);
   console.log(txnHash);
 
+  const url = process.env.GO_URL;
   const response = await fecth(`${url}/get/${txnHash}`, {
     method: 'GET'
   });
