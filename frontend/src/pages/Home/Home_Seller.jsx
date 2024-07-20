@@ -58,16 +58,14 @@ const Home_Seller = () => {
           <button
             className="btn btn-primary"
             onClick={() => {
-              onClick = { handleShow };
+              handleShow();
             }}
           >
             Add New Item
           </button>
         </div>
         <div className="w-100 text-white my-3">
-          <h2 w-100 text-white my-3>
-            Orders List
-          </h2>
+          <h2 className="w-100 text-white my-3">Orders List</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -99,9 +97,7 @@ const Home_Seller = () => {
           </Table>
         </div>
         <div className="w-100 text-white my-3">
-          <h2 w-100 text-white my-3>
-            Orders History
-          </h2>
+          <h2 className="w-100 text-white my-3">Orders History</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
