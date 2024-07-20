@@ -9,7 +9,6 @@ import Spinner from "react-bootstrap/Spinner";
 function AddNewItem({ show, handleClose }) {
   const [formData, setFormData] = useState({
     itemName: "",
-    quantity: "",
     imageUrl: "",
     sendTo: "",
   });
@@ -76,17 +75,6 @@ function AddNewItem({ show, handleClose }) {
               value={formData.itemName}
               onChange={handleChange}
               placeholder="Enter item name"
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formItemQuantity">
-            <Form.Label>Quantity</Form.Label>
-            <Form.Control
-              type="number"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              placeholder="Enter quantity"
             />
           </Form.Group>
 

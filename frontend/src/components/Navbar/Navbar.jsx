@@ -26,9 +26,9 @@ const Header = () => {
   useEffect(() => {
     const UserData = JSON.parse(localStorage.getItem("userInfo"));
     setUser(UserData);
-    if (UserData.userType == "Seller") {
+    if (UserData?.userType == "Seller") {
       setToRoute("/home-seller");
-    } else if (UserData.userType == "middle") {
+    } else if (UserData?.userType == "middle") {
       setToRoute("/home-middleman");
     } else {
       setToRoute("/home-buyer");
