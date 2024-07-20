@@ -212,8 +212,8 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     method: 'GET'
   });
 
-  const orderDetails = response.json();
+  const orderDetails = await response.json();
   console.log(orderDetails);
 
-  res.status(200).json(new ApiResponse(200, {}, "Order Details successfully fetched"));
+  res.status(200).json(new ApiResponse(200, { orderDetails }, "Order Details successfully fetched"));
 });
