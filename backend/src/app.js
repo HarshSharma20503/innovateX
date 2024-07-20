@@ -56,6 +56,10 @@ app.use("/api/user", userRouter);
 import orderRouter from "./routes/order.routes.js";
 app.use("/api/order", orderRouter);
 
+// Import and use transfer routes
+import transferRouter from "./routes/transfer.routes.js";
+app.use("/api/transfer", transferRouter);
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dist", "index.html"));
 });

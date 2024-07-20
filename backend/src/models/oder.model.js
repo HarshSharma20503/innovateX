@@ -54,6 +54,12 @@ const orderSchema = new Schema(
         tsxHash: {
             type: String,
             required: true
+        },
+        current_otp: {
+            type: String,
+        },
+        timestamp_otp: {
+            type: String
         }
     },
     { timestamps: true } // Automatically add createdAt and updatedAt fields
