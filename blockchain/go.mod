@@ -19,6 +19,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect
 	github.com/diamcircle/go-xdr v0.1.0 // indirect
+	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/gorilla/schema v1.2.1 // indirect
 	github.com/ipfs/boxo v0.12.0 // indirect

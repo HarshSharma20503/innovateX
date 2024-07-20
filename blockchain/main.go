@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -17,6 +18,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Use(cors.AllowAll().Handler)
 
 	r.Get("/create/{orderId}", createNFT)
 	r.Post("/update/{orderId}", updateNFT)
