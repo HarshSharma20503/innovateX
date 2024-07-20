@@ -104,14 +104,14 @@ export const addOrder = AsyncHandler(async (req, res) => {
     body: nftMint
   })
 
-  const res = await response.json();
+  const resp = await response.json();
 
   if (!res.success) {
     await Order.deleteOne({ _id: order['_id'] });
     throw new ApiError(500, "Internal Server Error!! ");
   }
 
-  const txnHash = res.txn_Hash;
+  const txnHash = resp.txn_Hash;
 
   // put txnHash in order database
   order = await Order.updateOne({ _id: order['_id'] }, {
