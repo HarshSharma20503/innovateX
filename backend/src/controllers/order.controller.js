@@ -191,7 +191,7 @@ export const showAll = AsyncHandler(async (req, res) => {
       data.push(temp);
     })
   );
-  res.status(200).json(new ApiResponse(200, "orders successfully fetched", ...data));
+  res.status(200).json(new ApiResponse(200, ...data, "orders successfully fetched"));
 });
 
 export const orderDetails = AsyncHandler(async (req, res) => {
@@ -204,8 +204,8 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   const order = await Order.findOne({ _id: orderId });
   const txnHash = order["txnHash"];
-  console.log(order);
-  console.log(txnHash);
+  console.log("order: ", order);
+  console.log("txnHash: ", txnHash);
 
   const url = process.env.GO_URL;
   const response = await fetch(`${url}/get/${txnHash}`, {
@@ -214,6 +214,28 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   const orderDetails = await response.json();
   console.log(orderDetails);
+
+  // order-> details stored in Database (created at the beginining)
+  // orderDetails-> detials stored on blockchain (changing on each stage)
+
+  let trackRecord = [];
+  let order_user_status = [];
+
+  // basic order info
+  const sender = await User.findOne({ _id: order["from"] });
+  const reciever = await User.findOne({ _id: order["to"] });
+  let orderInfo = {
+    "itemName": order["itemName"],
+    "from": sender["email"],
+    "to": reciever["email"],
+    "imgUrl": order["imgUrl"]
+  };
+
+  // track record
+  // trackRecord.push({
+  //   "id":
+  // })
+
 
   res.status(200).json(new ApiResponse(200, { orderDetails }, "Order Details successfully fetched"));
 });
