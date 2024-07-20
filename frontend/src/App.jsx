@@ -4,7 +4,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
 import PrivateRoutes from "./utils/PrivateRoutes";
@@ -12,6 +11,9 @@ import Navbar from "./components/Navbar/Navbar";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import Transfer from "./pages/Transfer/Transfer";
 import ItemDetails from "./pages/ItemDetails/ItemDetails";
+import Home_Seller from "./pages/Home/Home_Seller";
+import Home_Middleman from "./pages/Home/Home_Middleman";
+import Home_Buyer from "./pages/Home/Home_Buyer";
 
 const App = () => {
   return (
@@ -29,7 +31,9 @@ const App = () => {
       <Routes>
         {/* Private routes */}
         <Route element={<PrivateRoutes />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home-seller" element={<Home_Seller />} />
+          <Route path="/home-middleman" element={<Home_Middleman />} />
+          <Route path="/home-buyer" element={<Home_Buyer />} />
           <Route path="/transfer" element={<Transfer />} />
           <Route path="/itemDetails/:id" element={<ItemDetails />} />
         </Route>

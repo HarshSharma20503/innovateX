@@ -30,7 +30,7 @@ const Header = () => {
     <>
       <Navbar key="md" expand="md" className="bg-body-danger">
         <Container fluid>
-          <Navbar.Brand href="/">Project Name</Navbar.Brand>
+          <Navbar.Brand href="/">Supply Point</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-md`}
