@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
 import { GetApiCall } from "../../utils/Axios";
 
-const Home_Buyer = () => {
+const Home_Middleman = () => {
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(false);
   const [ordersQueue, setOrdersQueue] = useState([
@@ -45,9 +45,7 @@ const Home_Buyer = () => {
     <div className="container">
       <h1 className="w-100 text-center text-white my-3">Welcome {userInfo.name}</h1>
       <div className="w-100 text-white my-3">
-        <h2 w-100 text-white my-3>
-          Assigned Orders
-        </h2>
+        <h2 className="w-100 text-white my-3">Assigned Orders</h2>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -78,8 +76,29 @@ const Home_Buyer = () => {
           </tbody>
         </Table>
       </div>
+      <div className="w-100 text-white my-3">
+        <h2 className="w-100 text-white my-3">Confirmed Orders</h2>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>S.No.</th>
+              <th>Item Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ordersQueue.map((order, index) => (
+              <tr key={order.id}>
+                <td>{index + 1}</td>
+                <td>{order.itemName}</td>
+                <td>{order.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 };
 
-export default Home_Buyer;
+export default Home_Middleman;

@@ -5,7 +5,6 @@ import { GetApiCall } from "../../utils/Axios";
 
 const Home_Buyer = () => {
   const [userInfo, setUserInfo] = useState({});
-  const [loading, setLoading] = useState(false);
   const [ordersQueue, setOrdersQueue] = useState([
     {
       id: 1,
@@ -45,9 +44,7 @@ const Home_Buyer = () => {
     <div className="container">
       <h1 className="w-100 text-center text-white my-3">Welcome {userInfo.name}</h1>
       <div className="w-100 text-white my-3">
-        <h2 w-100 text-white my-3>
-          Orders List
-        </h2>
+        <h2 className="w-100 text-white my-3">Orders List</h2>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -79,9 +76,7 @@ const Home_Buyer = () => {
         </Table>
       </div>
       <div className="w-100 text-white my-3">
-        <h2 w-100 text-white my-3>
-          Orders History
-        </h2>
+        <h2 className="w-100 text-white my-3">Orders History</h2>
         <Table striped bordered hover>
           <thead>
             <tr>
