@@ -17,6 +17,11 @@ const userSchema = new Schema(
       type: String,
       required: true, // Password is required
     },
+    userType: {
+      type: String,
+      required: true
+    },
+    orders: [String],
   },
   { timestamps: true } // Automatically add createdAt and updatedAt fields
 );
