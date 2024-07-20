@@ -33,8 +33,6 @@ export const addOrder = AsyncHandler(async (req, res) => {
   // }
 
 
-
-
   const user = req.user;
   if (!user || user.userType !== "Seller") {
     throw new ApiError(400, "Invalid Operation for current user");
@@ -210,7 +208,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   console.log(txnHash);
 
   const url = process.env.GO_URL;
-  const response = await fecth(`${url}/get/${txnHash}`, {
+  const response = await fetch(`${url}/get/${txnHash}`, {
     method: 'GET'
   });
 
