@@ -20,7 +20,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(cors.AllowAll().Handler)
 
-	r.Get("/create/{orderId}", createNFT)
+	r.Post("/create/{orderId}", createNFT)
 	r.Post("/update/{orderId}", updateNFT)
 	r.Get("/get/{orderHash}", getNFT)
 
