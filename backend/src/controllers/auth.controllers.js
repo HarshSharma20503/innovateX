@@ -54,7 +54,7 @@ export const registerUser = AsyncHandler(async (req, res) => {
       {
         name: unverifiedUser.name,
         email: unverifiedUser.email,
-        userType: unverifiedUser.userType
+        userType: unverifiedUser.userType,
       },
       "Please verify your email to continue"
     )
@@ -81,12 +81,14 @@ export const confirmEmail = AsyncHandler(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
+  console.log("Unverified User", unverifiedUser);
+
   // Create a new verified user
   const user = await User.create({
     name: unverifiedUser.name,
     email: unverifiedUser.email,
     password: unverifiedUser.password,
-    userType: unverifiedUser.userType
+    userType: unverifiedUser.userType,
   });
   if (!user) {
     throw new ApiError(500, "Failed to create User");

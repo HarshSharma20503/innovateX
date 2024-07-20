@@ -45,9 +45,17 @@ const Login = () => {
     setLoading(true); // Start loading spinner
     const data = await PostApiCall("/api/auth/login", formData); // Make API call
     if (data.success) {
+      const userData = data.data;
+      console.log("data after login", data);
       localStorage.setItem("userInfo", JSON.stringify(data.data));
       toast.success("Login Successful"); // Display success message
-      navigate("/"); // Redirect to home page
+      if (userData.userType == "Seller") {
+        navigate("/home-seller");
+      } else if (userData.userType == "Buyer") {
+        navigate("/home-buyer");
+      } else {
+        navigate("/home-middleman");
+      }
     }
     setLoading(false); // Stop loading spinner
   };
