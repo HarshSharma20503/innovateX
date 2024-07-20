@@ -9,7 +9,6 @@ import SignUp from "./pages/Auth/SignUp";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import Navbar from "./components/Navbar/Navbar";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import Transfer from "./pages/Transfer/Transfer";
 import ItemDetails from "./pages/ItemDetails/ItemDetails";
 import Home_Seller from "./pages/Home/Home_Seller";
 import Home_Middleman from "./pages/Home/Home_Middleman";
@@ -34,7 +33,6 @@ const App = () => {
           <Route path="/home-seller" element={<Home_Seller />} />
           <Route path="/home-middleman" element={<Home_Middleman />} />
           <Route path="/home-buyer" element={<Home_Buyer />} />
-          <Route path="/transfer" element={<Transfer />} />
           <Route path="/itemDetails/:id" element={<ItemDetails />} />
         </Route>
 

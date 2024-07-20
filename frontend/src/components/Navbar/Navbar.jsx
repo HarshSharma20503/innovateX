@@ -13,6 +13,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("userInfo")));
+  const [toroute, setToRoute] = useState("");
 
   const handleLogout = async () => {
     localStorage.removeItem("userInfo");
@@ -23,7 +24,15 @@ const Header = () => {
   };
 
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("userInfo")));
+    const UserData = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(UserData);
+    if (UserData.userType == "Seller") {
+      setToRoute("/home-seller");
+    } else if (UserData.userType == "middle") {
+      setToRoute("/home-middleman");
+    } else {
+      setToRoute("/home-buyer");
+    }
   }, [localStorage.getItem("userInfo")]);
 
   return (
@@ -38,14 +47,14 @@ const Header = () => {
             placement="end"
           >
             <Offcanvas.Header closeButton className="bg-info">
-              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-md`}>Project Name</Offcanvas.Title>
+              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-md`}>Supply Point</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body className="bg-info">
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 {user ? (
                   <>
-                    <Nav.Link as={Link} to="/">
-                      Profile
+                    <Nav.Link as={Link} to={toroute}>
+                      Home
                     </Nav.Link>
                     <Nav.Link as={Link} to="/login" onClick={handleLogout}>
                       Logout
