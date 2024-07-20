@@ -10,6 +10,8 @@ import SignUp from "./pages/Auth/SignUp";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import Navbar from "./components/Navbar/Navbar";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import Transfer from "./pages/Transfer/Transfer";
+import ItemDetails from "./pages/ItemDetails/ItemDetails";
 
 const App = () => {
   return (
@@ -28,6 +30,8 @@ const App = () => {
         {/* Private routes */}
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
+          <Route path="/transfer" element={<Transfer />} />
+          <Route path="/itemDetails/:id" element={<ItemDetails />} />
         </Route>
 
         {/* Public routes */}

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import { PostApiCall } from "../../utils/Axios";
+import Form from "react-bootstrap/Form";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const SignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    userType: "",
     password: "",
   });
 
@@ -32,6 +34,10 @@ const SignUp = () => {
       toast.error("Password is required");
       return false;
     }
+    if (!formData.userType) {
+      toast.error("User Type is required");
+      return false;
+    }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(formData.email)) {
       toast.error("Invalid Email");
@@ -43,7 +49,6 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return;
-
     setLoading(true);
     const data = await PostApiCall("/api/auth/signUp", formData);
     if (data.success) {
@@ -80,6 +85,19 @@ const SignUp = () => {
               value={formData.email}
               onChange={handleChange}
             />
+          </div>
+          <div className="mb-3">
+            <label className="text-white mb-2">User Type</label>
+            <Form.Select
+              aria-label="Default select example"
+              name="userType"
+              value={formData.userType}
+              onChange={handleChange}
+            >
+              <option value="">Select Type</option>
+              <option value="Seller">Seller</option>
+              <option value="Buyer">Buyer</option>
+            </Form.Select>
           </div>
           <div className="mb-3">
             <label className="text-white mb-2">Password</label>
