@@ -78,7 +78,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
       "current_owner": user._id,
       "previous_owners": [],
       "location": "warehouse",
-      "timestamp": Date.now()
+      "timestamp": "2024-07-20T10:00:00Z"
     },
     "data": {
       "item": itemName,
@@ -102,7 +102,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
       ans +=
         arr[(Math.floor(Math.random() * arr.length))];
     }
-    console.log(ans);
+    return ans;
   }
 
   const generatedId = randomStr(10, '1234567890abcdef');
@@ -111,24 +111,18 @@ export const addOrder = AsyncHandler(async (req, res) => {
     headers: {
       'content-type': 'application/json'
     },
-    body: nftMint
+    body: JSON.stringify(nftMint)
   })
 
   const resp = await response.json();
 
-  if (!res.success) {
-    await Order.deleteOne({ _id: order['_id'] });
-    throw new ApiError(500, "Internal Server Error!! ");
-  }
-
-  const txnHash = resp.txn_Hash;
+  const txnHash = resp.txn_hash;
 
   // put txnHash in order database
-  order = await Order.updateOne({ _id: order['_id'] }, {
+  await Order.updateOne({ _id: order['_id'] }, {
     txnHash: txnHash,
     orderId: generatedId
   })
-
 
   //
   const updateResult1 = await User.updateOne(
