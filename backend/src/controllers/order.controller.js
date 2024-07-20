@@ -8,24 +8,20 @@ import { uploadOnCloudinary } from "../config/connectCloudinary.js";
 export const addOrder = AsyncHandler(async (req, res) => {
     const user = req.user;
     if (!user || user.userType !== 'Seller') {
-        throw new ApiError(400, {
-            message: "Invalid Operation for current user"
-        });
+        throw new ApiError(400, "Invalid Operation for current user");
     }
 
     const { itemName, sendTo, imgUrl } = req.body;
 
     if (!itemName || !sendTo || !imgUrl) {
-        throw new ApiError(400, {
-            message: "All fields are required"
-        })
+        throw new ApiError(400, "All fields are required"
+        )
     }
 
     const recieverUser = await User.findOne({ email: sendTo });
     if (!recieverUser) {
-        throw new ApiError(400, {
-            message: "Reciever not found"
-        });
+        throw new ApiError(400, "Reciever not found"
+        );
     }
 
     // console.log(recieverUser._id);
@@ -71,9 +67,8 @@ export const addOrder = AsyncHandler(async (req, res) => {
             orders: order._id.toString()
         }
     });
-    res.status(200).json(new ApiResponse(200, {
-        message: "Order Successfully registered"
-    }))
+    res.status(200).json(new ApiResponse(200, {}, "Order Successfully registered"
+    ))
 });
 
 export const uploadPic = AsyncHandler(async (req, res) => {
@@ -94,7 +89,7 @@ export const uploadPic = AsyncHandler(async (req, res) => {
 export const showAll = AsyncHandler(async (req, res) => {
     const user = req.user;
     if (!user) {
-        throw new ApiError(400, { message: "Invalid action" });
+        throw new ApiError(400, "Invalid action");
     }
 
     const orders = await user.orders;
@@ -110,7 +105,7 @@ export const showAll = AsyncHandler(async (req, res) => {
             data.push(temp)
         })
     )
-    res.status(200).json(new ApiResponse(200, { message: "orders successfully fetched", data }));
+    res.status(200).json(new ApiResponse(200, "orders successfully fetched", ...data));
 })
 
 
@@ -119,7 +114,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     const { orderId } = req.params;
     console.log(orderId);
     if (!user || !orderId) {
-        throw new ApiError(400, { message: "Invalid action" });
+        throw new ApiError(400, "Invalid action");
     }
 
     const order = await Order.findOne({ _id: orderId });
@@ -127,5 +122,5 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     console.log(order);
     console.log(tsxHash);
 
-    res.status(200).json(new ApiResponse({ message: "Order Details successfully fetched" }))
+    res.status(200).json(new ApiResponse(200, {}, "Order Details successfully fetched"))
 })
