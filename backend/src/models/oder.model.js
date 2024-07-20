@@ -51,10 +51,6 @@ const orderSchema = new Schema(
             required: true
         },
         track: [middlemanSchema],
-        tsxHash: {
-            type: String,
-            required: true
-        },
         current_otp: {
             type: String,
         },
@@ -62,6 +58,9 @@ const orderSchema = new Schema(
             type: String
         },
         txnHash: {
+            type: String
+        },
+        orderId: {
             type: String
         }
     },

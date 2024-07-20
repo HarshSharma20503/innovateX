@@ -62,7 +62,6 @@ export const addOrder = AsyncHandler(async (req, res) => {
     imgUrl,
     track,
     status: "accepted",
-    txnHash,
   });
 
   if (!order) {
@@ -96,7 +95,18 @@ export const addOrder = AsyncHandler(async (req, res) => {
   };
 
   const url = process.env.GO_URL;
-  const response = await fetch(`${url}/create/${order['_id']}`, {
+
+  function randomStr(len, arr) {
+    let ans = '';
+    for (let i = len; i > 0; i--) {
+      ans +=
+        arr[(Math.floor(Math.random() * arr.length))];
+    }
+    console.log(ans);
+  }
+
+  const generatedId = randomStr(10, '1234567890abcdef');
+  const response = await fetch(`${url}/create/${generatedId}`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -115,7 +125,8 @@ export const addOrder = AsyncHandler(async (req, res) => {
 
   // put txnHash in order database
   order = await Order.updateOne({ _id: order['_id'] }, {
-    txnHash: txnHash
+    txnHash: txnHash,
+    orderId: generatedId
   })
 
 

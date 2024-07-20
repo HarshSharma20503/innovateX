@@ -2,7 +2,6 @@ import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import otpGenerator from 'otp-generator'
-import { Router } from "express";
 import { sendMailWithText } from "../utils/SendMail.js";
 import { Order } from "../models/oder.model.js";
 
