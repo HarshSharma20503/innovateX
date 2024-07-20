@@ -35,7 +35,8 @@ const Home_Seller = () => {
     setUserInfo(JSON.parse(localStorage.getItem("userInfo")));
     const fetchOrders = async () => {
       setLoading(true);
-      const data = await GetApiCall(`/api/orders/${JSON.parse(localStorage.getItem("userInfo")).id}`);
+      const data = await GetApiCall(`/api/order/showAll`);
+      console.log(data);
       if (data.success) {
         const orders = data.data;
         const queuedOrders = orders.filter((order) => order.status === "Pending" || order.status === "Initiated");
@@ -46,7 +47,7 @@ const Home_Seller = () => {
       }
       setLoading(false);
     };
-    // fetchOrders();
+    fetchOrders();
   }, []);
 
   return (
