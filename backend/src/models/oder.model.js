@@ -62,6 +62,9 @@ const orderSchema = new Schema(
         },
         orderId: {
             type: String
+        },
+        qr: {
+            type: String
         }
     },
     { timestamps: true } // Automatically add createdAt and updatedAt fields

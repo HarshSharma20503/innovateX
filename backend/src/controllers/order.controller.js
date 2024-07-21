@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Order } from "../models/oder.model.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../config/connectCloudinary.js";
+import QRCode from 'qrcode';
 
 export const addOrder = AsyncHandler(async (req, res) => {
   console.log("******* inside the addOrder function ********");
@@ -126,11 +127,29 @@ export const addOrder = AsyncHandler(async (req, res) => {
   console.log("txnHash: ", txnHash);
 
   // put txnHash in order database
+  const details_for_qr = {
+    itemName: order["itemName"],
+    from: order["from"],
+    to: order["to"],
+    imageUrl: order["imgUrl"]
+  }
+  // Converting the data into String format
+  let stringdata = JSON.stringify(details_for_qr);
+  let qrCode;
+  QRCode.toDataURL(stringdata, function (err, code) {
+    if (err) return console.log("error occurred")
+
+    // Printing the code
+    console.log('qrCode: ', code);
+    qrCode = code;
+  })
+
   await Order.updateOne(
     { _id: order["_id"] },
     {
       txnHash: txnHash,
       orderId: generatedId,
+      qr: qrCode
     }
   );
 
@@ -173,7 +192,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
 
   console.log("updateResult4: ", updateResult4);
 
-  res.status(200).json(new ApiResponse(200, {}, "Order Successfully registered"));
+  res.status(200).json(new ApiResponse(200, { qrCode }, "Order Successfully registered"));
 });
 
 export const uploadPic = AsyncHandler(async (req, res) => {
@@ -247,6 +266,8 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   // basic order info
   const sender = await User.findOne({ _id: order["from"] });
   const reciever = await User.findOne({ _id: order["to"] });
+  console.log('sender: ', sender);
+  console.log('reciever: ', reciever);
   orderInfo = {
     itemName: order["itemName"],
     from: sender["email"],
