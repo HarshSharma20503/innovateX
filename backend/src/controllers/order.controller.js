@@ -264,8 +264,8 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   let orderInfo = {};
 
   // basic order info
-  const sender = await User.findOne({ _id: order["from"] });
-  const reciever = await User.findOne({ _id: order["to"] });
+  const sender = await User.findOne({ _id: order["from"].id });
+  const reciever = await User.findOne({ _id: order["to"].id });
   console.log('sender: ', sender);
   console.log('reciever: ', reciever);
   orderInfo = {
