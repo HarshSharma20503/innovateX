@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import QrScanner from "react-qr-scanner";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
+import { PostApiCall } from "../../utils/Axios";
 
 const ScanQR = ({ showModal, handleCloseModal, handleError, handleScan, qrData, orderId, setQrData }) => {
   const previewStyle = {
@@ -11,7 +12,7 @@ const ScanQR = ({ showModal, handleCloseModal, handleError, handleScan, qrData, 
   };
 
   const handleConfirm = async () => {
-    const response = await PostApiCall(`api/transfer/confirm/${orderId}`, formData);
+    const response = await PostApiCall(`api/transfer/confirm/${orderId}`, {});
     if (response.success) {
       toast.success("Delivery Confirmed");
       setQrData(null);

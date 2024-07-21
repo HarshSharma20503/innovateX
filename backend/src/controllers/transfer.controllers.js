@@ -106,20 +106,20 @@ export const confirmTransaction = AsyncHandler(async (req, res) => {
     method: "GET",
   });
 
-  const orderDetails = await response.json();
+  let orderDetails = await response.json();
   console.log(orderDetails);
 
   const current_owner = orderDetails.ownership.current_owner;
-  orderDetails.previous_owners.push(current_owner);
+  orderDetails.ownership.previous_owners.push(current_owner);
   orderDetails.tracking.push({
     latitude: "21.03",
     longitude: "24.56",
     handler: orderDetails.current_owner,
     timestamp: "2024-07-20T21:00:00Z",
   });
-  orderDetails.current_owner = user._id;
+  orderDetails.ownership.current_owner = user._id;
 
-  if (orderDetails.previous_owners.length == order["track"].length + 1) {
+  if (orderDetails.ownership.previous_owners.length == order["track"].length + 1) {
     orderDetails.status.delivered = true;
     orderDetails.status.paid = true;
     await Order.updateOne(
@@ -130,12 +130,12 @@ export const confirmTransaction = AsyncHandler(async (req, res) => {
     );
   }
 
-  response = await fetch(`${url}/create/${order["orderId"]}`, {
+  response = await fetch(`${url}/update/${order["orderId"]}`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(nftMint),
+    body: JSON.stringify(orderDetails),
   });
 
   const resp = await response.json();
@@ -152,5 +152,11 @@ export const confirmTransaction = AsyncHandler(async (req, res) => {
       txnHash: txnHash,
     }
   );
+  response = await fetch(`${url}/get/${txnHash}`, {
+    method: "GET",
+  });
+
+  orderDetails = await response.json();
+  console.log(orderDetails);
   res.status(200).json(new ApiResponse(200, {}, "Step confirmed successfuly"));
 });
