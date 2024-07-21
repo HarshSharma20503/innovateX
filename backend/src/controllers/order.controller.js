@@ -173,16 +173,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
   );
   console.log("updateResult2: ", updateResult2);
   const updateResult3 = await User.updateOne(
-    { _id: "669baf564f903c7d64c4161c" },
-    {
-      $push: {
-        orders: order._id.toString(),
-      },
-    }
-  );
-  console.log("updateResult3: ", updateResult3);
-  const updateResult4 = await User.updateOne(
-    { _id: "669baf994f903c7d64c4161d" },
+    { _id: "669c7e964f903c7d64c41623" },
     {
       $push: {
         orders: order._id.toString(),
