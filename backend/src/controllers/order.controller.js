@@ -274,11 +274,14 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     to: reciever["email"],
     imgUrl: order["imgUrl"],
   };
+  console.log('orderInfo: ', orderInfo);
 
   // track record
   const fullTrack = order['track'];
   const previous_owners = orderDetails.ownership.previous_owners;
   const current_owner = orderDetails.ownership.current_owner;
+  console.log('previous_owners: ', previous_owners);
+  console.log('current_owner: ', current_owner);
   let flag = !previous_owners.find(x => x == sender["_id"]);
   trackRecord.push({
     "id": sender["_id"],
@@ -291,6 +294,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   await Promise.all(
     fullTrack.forEach(async (item) => {
       const middle = await User.findOne({ _id: item.id });
+      console.log("middle: ", middle);
       flag = !previous_owners.find(x => x == item.id)
       trackRecord.push({
         "id": item.id,
@@ -310,6 +314,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     "recieve_status": current_owner === reciever["_id"]
   })
 
+  console.log(trackRecord);
   // order_user_status
   const order_user_track = trackRecord.find(x => x.id === user._id);
   order_user_status = {
