@@ -191,7 +191,7 @@ export const showAll = AsyncHandler(async (req, res) => {
       data.push(temp);
     })
   );
-  res.status(200).json(new ApiResponse(200, ...data, "orders successfully fetched"));
+  res.status(200).json(new ApiResponse(200, data, "orders successfully fetched"));
 });
 
 export const orderDetails = AsyncHandler(async (req, res) => {
@@ -219,12 +219,13 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   // orderDetails-> detials stored on blockchain (changing on each stage)
 
   let trackRecord = [];
-  let order_user_status = [];
+  let order_user_status = {};
+  let orderInfo
 
   // basic order info
   const sender = await User.findOne({ _id: order["from"] });
   const reciever = await User.findOne({ _id: order["to"] });
-  let orderInfo = {
+  orderInfo = {
     "itemName": order["itemName"],
     "from": sender["email"],
     "to": reciever["email"],
@@ -232,10 +233,46 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   };
 
   // track record
-  // trackRecord.push({
-  //   "id":
-  // })
+  const fullTrack = order['track'];
+  const previous_owners = orderDetails.ownership.previous_owners;
+  const current_owner = orderDetails.ownership.current_owner;
+  let flag = !previous_owners.find(x => x == sender["_id"]);
+  trackRecord.push({
+    "id": sender["_id"],
+    "name": sender["name"],
+    "email": sender["email"],
+    "send_status": !previous_owners.find(x => x == sender["_id"]),
+    "recieve_status": true
+  })
+  let previous_flag = flag
+  await Promise.all(
+    fullTrack.forEach(async (item) => {
+      const middle = await User.findOne({ _id: item.id });
+      flag = !previous_owners.find(x => x == item.id)
+      trackRecord.push({
+        "id": item.id,
+        "name": middle["name"],
+        "email": middle["email"],
+        "send_status": flag,
+        "recieve_status": previous_flag
+      })
+      previous_flag = flag;
+    })
+  );
+  trackRecord.push({
+    "id": reciever["_id"],
+    "name": reciever["name"],
+    "email": reciever["email"],
+    "send_status": false,
+    "recieve_status": current_owner === reciever["_id"]
+  })
 
+  // order_user_status
+  const order_user_track = trackRecord.find(x => x.id === user._id);
+  order_user_status = {
+    "sent": order_user_track.send_status,
+    "recieved": order_user_track.recieve_status
+  }
 
-  res.status(200).json(new ApiResponse(200, { orderDetails }, "Order Details successfully fetched"));
+  res.status(200).json(new ApiResponse(200, { orderInfo, order_user_status, trackRecord }, "Order Details successfully fetched"));
 });
