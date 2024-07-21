@@ -15,19 +15,19 @@ export const sendOtp = AsyncHandler(async (req, res) => {
 
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
 
-    const currentUserMail = user['email'];
+    // const currentUserMail = user['email'];
 
-    // select mailId on basis of current owner and next reciever (from blockchain)
-    const currentOwner = "";
-    const mailId = "sparshrajput92@gmail.com";
+    // // select mailId on basis of current owner and next reciever (from blockchain)
+    // const currentOwner = "";
+    // const mailId = "sparshrajput92@gmail.com";
 
-    // check that currentUserMail should be equal to currentOwner
-    // 
+    // // check that currentUserMail should be equal to currentOwner
+    // // 
 
-    const subject = "OTP for reciever Verification";
-    const text = `You OTP is: ${otp}`;
-    const sentMail = await sendMailWithText(mailId, subject, text);
-    console.log(otp);
+    // const subject = "OTP for reciever Verification";
+    // const text = `You OTP is: ${otp}`;
+    // const sentMail = await sendMailWithText(mailId, subject, text);
+    // console.log(otp);
 
     // store otp and current time stamp in database
     const order = await Order.updateOne({ _id: orderId }, {
@@ -35,7 +35,22 @@ export const sendOtp = AsyncHandler(async (req, res) => {
         timestamp_otp: Date.now()
     })
 
-    res.status(200).json(new ApiResponse(200, {}, "Email sent successfully"));
+    res.status(200).json(new ApiResponse(200, {}, "OTP sent"));
+})
+
+export const getOtp = AsyncHandler(async (req, res) => {
+    const user = req.user;
+    const { orderId } = req.params;
+    if (!user || !orderId) {
+        throw new ApiError(400, "Invalid Action");
+    }
+    const order = await Order.findOne({ _id: orderId });
+    if (!order) {
+        throw new ApiError(400, "Invalid Action");
+    }
+
+    const otp = order["current_otp"];
+    res.status(200).json(new ApiResponse(200, { otp }, "OTP fetched"));
 })
 
 export const verifyOtp = AsyncHandler(async (req, res) => {
@@ -48,10 +63,10 @@ export const verifyOtp = AsyncHandler(async (req, res) => {
     }
 
     const order = await Order.findOne({ _id: orderId });
-    const currentUserMail = user['email'];
+    // const currentUserMail = user['email'];
 
-    // get current Owner from blockchain and compare that with currentUserMail
-    // 
+    // // get current Owner from blockchain and compare that with currentUserMail
+    // // 
 
     const current_otp = order['current_otp'];
     const time_since_otp_generated = (Date.now() - order['timestamp_otp']) / 1000;
@@ -68,6 +83,35 @@ export const verifyOtp = AsyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, { success: true }, "Otp verification Successfull"))
 })
 
-export const transferCompleted = AsyncHandler(async (req, res) => {
-    // change state in transaction in blockchain
+export const confirmTransaction = AsyncHandler(async (req, res) => {
+    const user = req.user;
+    const { orderId } = req.params;
+    if (!user || !orderId) {
+        throw new ApiError(400, "Invalid Action");
+    }
+    const order = await Order.findOne({ _id: orderId });
+    if (!order) {
+        throw new ApiError(400, "Invalid Action");
+    }
+    const txnHash = order["txnHash"];
+    console.log("order: ", order);
+    console.log("txnHash: ", txnHash);
+
+    const url = process.env.GO_URL;
+    const response = await fetch(`${url}/get/${txnHash}`, {
+        method: "GET",
+    });
+
+    const orderDetails = await response.json();
+    console.log(orderDetails);
+
+    const current_owner = orderDetails.ownership.current_owner;
+    orderDetails.previous_owners.push(current_owner);
+    orderDetails.tracking.push({
+        latitude: "21.03",
+        longitude: "24.56",
+        handler: orderDetails.current_owner,
+        timestamp: "2024-07-20T21:00:00Z"
+    })
+
 })
