@@ -148,7 +148,7 @@ const ItemDetails = () => {
           ) : (
             <Card.Body>
               <div className="container d-flex justify-content-around m-0">
-                {(userInfo.userType == "middle" || userInfo.userType == "Buyer") && (
+                {(userInfo.userType == "Middle" || userInfo.userType == "Buyer") && (
                   <Card className="text-center w-100 mx-0">
                     <Card.Header as="h6">Recieve Item from</Card.Header>
                     <Table striped bordered hover responsive="sm">
@@ -181,7 +181,7 @@ const ItemDetails = () => {
                     </Table>
                   </Card>
                 )}
-                {(userInfo.userType == "middle" || userInfo.userType == "Seller") && (
+                {(userInfo.userType == "Middle" || userInfo.userType == "Seller") && (
                   <Card className="text-center w-100 me-0">
                     <Card.Header as="h6">Give Item To</Card.Header>
 
