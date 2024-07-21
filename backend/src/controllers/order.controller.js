@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Order } from "../models/oder.model.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../config/connectCloudinary.js";
-import QRCode from 'qrcode';
+import QRCode from "qrcode";
 
 export const addOrder = AsyncHandler(async (req, res) => {
   console.log("******* inside the addOrder function ********");
@@ -131,25 +131,25 @@ export const addOrder = AsyncHandler(async (req, res) => {
     itemName: order["itemName"],
     from: order["from"],
     to: order["to"],
-    imageUrl: order["imgUrl"]
-  }
+    imageUrl: order["imgUrl"],
+  };
   // Converting the data into String format
   let stringdata = JSON.stringify(details_for_qr);
   let qrCode;
   QRCode.toDataURL(stringdata, function (err, code) {
-    if (err) return console.log("error occurred")
+    if (err) return console.log("error occurred");
 
     // Printing the code
-    console.log('qrCode: ', code);
+    console.log("qrCode: ", code);
     qrCode = code;
-  })
+  });
 
   await Order.updateOne(
     { _id: order["_id"] },
     {
       txnHash: txnHash,
       orderId: generatedId,
-      qr: qrCode
+      qr: qrCode,
     }
   );
 
@@ -266,62 +266,95 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   // basic order info
   const sender = await User.findOne({ _id: order["from"].id });
   const reciever = await User.findOne({ _id: order["to"].id });
-  console.log('sender: ', sender);
-  console.log('reciever: ', reciever);
+  console.log("sender: ", sender);
+  console.log("reciever: ", reciever);
   orderInfo = {
     itemName: order["itemName"],
     from: sender["email"],
     to: reciever["email"],
     imgUrl: order["imgUrl"],
   };
-  console.log('orderInfo: ', orderInfo);
+  console.log("orderInfo: ", orderInfo);
 
   // track record
-  const fullTrack = order['track'];
+  const fullTrack = order["track"];
   console.log("fullTrack: ", fullTrack);
   const previous_owners = orderDetails.ownership.previous_owners;
   const current_owner = orderDetails.ownership.current_owner;
-  console.log('previous_owners: ', previous_owners);
-  console.log('current_owner: ', current_owner);
-  let flag = previous_owners.length != 0 && previous_owners.find(x => x == sender["_id"]) != undefined;
+  console.log("previous_owners: ", previous_owners);
+  console.log("current_owner: ", current_owner);
+  console.log("previous_owners.length: ", previous_owners.length != 0);
+  let flag = previous_owners.length != 0 && previous_owners.find((x) => x == sender["_id"]) != undefined;
   trackRecord.push({
-    "id": sender["_id"],
-    "name": sender["name"],
-    "email": sender["email"],
-    "send_status": flag,
-    "recieve_status": true
-  })
-  let previous_flag = flag
-  await Promise.all(
-    fullTrack.forEach(async (item) => {
-      const middle = await User.findOne({ _id: item.id });
-      console.log("middle: ", middle);
-      flag = previous_owners.length != 0 && previous_owners.find(x => x == item.id) != undefined;
-      trackRecord.push({
-        "id": item.id,
-        "name": middle["name"],
-        "email": middle["email"],
-        "send_status": flag,
-        "recieve_status": previous_flag
-      })
-      previous_flag = flag;
-    })
-  );
+    id: sender["_id"],
+    name: sender["name"],
+    email: sender["email"],
+    send_status: flag,
+    recieve_status: true,
+  });
+  let previous_flag = flag;
+  // await Promise.all(
+  //   fullTrack.forEach(async (item) => {
+  //     console.log("item: ", item);
+  //     const middle = await User.findOne({ _id: item.id });
+  //     console.log("middle: ", middle);
+  //     flag = previous_owners.length != 0 && previous_owners.find((x) => x == item.id) != undefined;
+  //     trackRecord.push({
+  //       id: item.id,
+  //       name: middle["name"],
+  //       email: middle["email"],
+  //       send_status: flag,
+  //       recieve_status: previous_flag,
+  //     });
+  //     previous_flag = flag;
+  //   })
+  // );
+  // fullTrack.forEach(async (item) => {
+  // console.log("item: ", item);
+
+  let item = fullTrack[0];
+  let middle = await User.findOne({ _id: item.id });
+  console.log("middle: ", middle);
+  flag = previous_owners.length != 0 && previous_owners.find((x) => x == item.id) != undefined;
   trackRecord.push({
-    "id": reciever["_id"],
-    "name": reciever["name"],
-    "email": reciever["email"],
-    "send_status": false,
-    "recieve_status": current_owner === reciever["_id"]
-  })
+    id: item.id,
+    name: middle["name"],
+    email: middle["email"],
+    send_status: flag,
+    recieve_status: previous_flag,
+  });
+  previous_flag = flag;
+  item = fullTrack[1];
+  middle = await User.findOne({ _id: item.id });
+  console.log("middle: ", middle);
+  flag = previous_owners.length != 0 && previous_owners.find((x) => x == item.id) != undefined;
+  trackRecord.push({
+    id: item.id,
+    name: middle["name"],
+    email: middle["email"],
+    send_status: flag,
+    recieve_status: previous_flag,
+  });
+  previous_flag = flag;
+
+  console.log("trackRecord: ", trackRecord);
+  trackRecord.push({
+    id: reciever["_id"],
+    name: reciever["name"],
+    email: reciever["email"],
+    send_status: false,
+    recieve_status: current_owner === reciever["_id"],
+  });
 
   console.log("track: ", trackRecord);
   // order_user_status
-  const order_user_track = trackRecord.find(x => x.id === user._id);
+  const order_user_track = trackRecord.find((x) => x.id === user._id);
   order_user_status = {
-    "sent": order_user_track.send_status,
-    "recieved": order_user_track.recieve_status
-  }
+    sent: order_user_track?.send_status ? order_user_track.send_status : false,
+    recieved: order_user_track?.recieve_status ? order_user_track.recieve_status : false,
+  };
 
-  res.status(200).json(new ApiResponse(200, { orderInfo, order_user_status, trackRecord }, "Order Details successfully fetched"));
+  res
+    .status(200)
+    .json(new ApiResponse(200, { orderInfo, order_user_status, trackRecord }, "Order Details successfully fetched"));
 });
