@@ -278,16 +278,17 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   // track record
   const fullTrack = order['track'];
+  console.log("fullTrack: ", fullTrack);
   const previous_owners = orderDetails.ownership.previous_owners;
   const current_owner = orderDetails.ownership.current_owner;
   console.log('previous_owners: ', previous_owners);
   console.log('current_owner: ', current_owner);
-  let flag = !previous_owners.find(x => x == sender["_id"]);
+  let flag = previous_owners.length != 0 && previous_owners.find(x => x == sender["_id"]) != undefined;
   trackRecord.push({
     "id": sender["_id"],
     "name": sender["name"],
     "email": sender["email"],
-    "send_status": !previous_owners.find(x => x == sender["_id"]),
+    "send_status": flag,
     "recieve_status": true
   })
   let previous_flag = flag
@@ -295,7 +296,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     fullTrack.forEach(async (item) => {
       const middle = await User.findOne({ _id: item.id });
       console.log("middle: ", middle);
-      flag = !previous_owners.find(x => x == item.id)
+      flag = previous_owners.length != 0 && previous_owners.find(x => x == item.id) != undefined;
       trackRecord.push({
         "id": item.id,
         "name": middle["name"],
@@ -314,7 +315,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     "recieve_status": current_owner === reciever["_id"]
   })
 
-  console.log(trackRecord);
+  console.log("track: ", trackRecord);
   // order_user_status
   const order_user_track = trackRecord.find(x => x.id === user._id);
   order_user_status = {
