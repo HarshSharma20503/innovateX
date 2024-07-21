@@ -120,8 +120,8 @@ export const confirmTransaction = AsyncHandler(async (req, res) => {
   orderDetails.ownership.current_owner = user._id;
 
   if (orderDetails.ownership.previous_owners.length == order["track"].length + 1) {
-    orderDetails.status.delivered = true;
-    orderDetails.status.paid = true;
+    orderDetails.delivered.delivered = true;
+    orderDetails.delivered.paid = true;
     await Order.updateOne(
       { _id: order["_id"] },
       {

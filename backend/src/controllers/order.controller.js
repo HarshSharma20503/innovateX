@@ -181,7 +181,6 @@ export const addOrder = AsyncHandler(async (req, res) => {
     }
   );
 
-
   res.status(200).json(new ApiResponse(200, { qrCode }, "Order Successfully registered"));
 });
 
@@ -342,7 +341,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     name: reciever["name"],
     email: reciever["email"],
     send_status: false,
-    recieve_status: current_owner === reciever["_id"],
+    recieve_status: current_owner.toString() == reciever["_id"].toString(),
   });
 
   console.log("track: ", trackRecord);
