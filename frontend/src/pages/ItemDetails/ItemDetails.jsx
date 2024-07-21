@@ -21,13 +21,7 @@ const ItemDetails = () => {
   // const [showConfirmDeliveryModal, setShowConfirmDeliveryModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [qrData, setQrData] = useState(null);
-  const [itemDetails, setItemDetails] = useState({
-    itemName: "Sprash ka condom",
-    from: "sparshgaandu@gmail.com",
-    to: "harshsharma20503@gmail.com",
-    imgUrl: "https://hentai.tv/wp-content/uploads/2024/07/rc1269302package.jpg",
-    // imgUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOGEX8nxBnr3oM6TRZ4qiXyIRYUH2iiedLzA&s",
-  });
+  const [itemDetails, setItemDetails] = useState();
   const [orderStatus, setOrderStatus] = useState();
   const [trackRecord, setTrackRecord] = useState([]);
 
@@ -51,12 +45,10 @@ const ItemDetails = () => {
   const handleShowSendOTPModal = () => setShowSendOTPModal(true);
   const handleCloseSendOTPModal = () => setShowSendOTPModal(false);
 
-  // const handleShowConfirmDeliveryModal = () => setShowConfirmDeliveryModal(true);
-  // const handleCloseConfirmDeliveryModal = () => setShowConfirmDeliveryModal(false);
-
   useEffect(() => {
     // Fetch item details from backend
     const getItemDetails = async () => {
+      console.log("fetching item details");
       setLoading(true);
       const response = await GetApiCall(`api/order/orderDetails/${id}`);
       console.log(response);
@@ -78,21 +70,21 @@ const ItemDetails = () => {
         showModal={showModal}
         handleScan={handleScan}
         qrData={qrData}
-        fromEmail={itemDetails.from}
+        // fromEmail={itemDetails.from}
         orderId={id}
         setQrData={setQrData}
       />
       <GetOTP
         showModal={showQTPModal}
         handleCloseModal={handleCloseOTPModal}
-        fromEmail={itemDetails.from}
+        // fromEmail={itemDetails.from}
         orderId={id}
       />
       <SendOTP
         showModal={showSendOTPModal}
         handleCloseModal={handleCloseSendOTPModal}
         orderId={id}
-        fromEmail={itemDetails.from}
+        // fromEmail={itemDetails.from}
       />
       {/* <ConfirmDelivery
         showModal={showConfirmDeliveryModal}
@@ -116,7 +108,7 @@ const ItemDetails = () => {
                     <th>Details</th>
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   <tr>
                     <td>Iteam Name</td>
                     <td>{itemDetails.itemName}</td>
@@ -135,7 +127,7 @@ const ItemDetails = () => {
                       <img src={itemDetails.imgUrl} className="img-fluid" />
                     </td>
                   </tr>
-                </tbody>
+                </tbody> */}
               </Table>
             </Card.Body>
           )}
@@ -189,7 +181,7 @@ const ItemDetails = () => {
                     <Card.Header as="h6">Give Item To</Card.Header>
 
                     <Table striped bordered hover responsive="md">
-                      <tbody>
+                      {/* <tbody>
                         <tr>
                           <td>From</td>
                           <td>{itemDetails.from}</td>
@@ -210,7 +202,7 @@ const ItemDetails = () => {
                           <td>Delivery Status</td>
                           <td>pending</td>
                         </tr>
-                      </tbody>
+                      </tbody> */}
                     </Table>
                   </Card>
                 )}
