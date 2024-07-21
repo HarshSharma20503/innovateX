@@ -79,10 +79,21 @@ const ItemDetails = () => {
         handleScan={handleScan}
         qrData={qrData}
         fromEmail={itemDetails.from}
+        orderId={id}
         setQrData={setQrData}
       />
-      <GetOTP showModal={showQTPModal} handleCloseModal={handleCloseOTPModal} fromEmail={itemDetails.from} />
-      <SendOTP showModal={showSendOTPModal} handleCloseModal={handleCloseSendOTPModal} fromEmail={itemDetails.from} />
+      <GetOTP
+        showModal={showQTPModal}
+        handleCloseModal={handleCloseOTPModal}
+        fromEmail={itemDetails.from}
+        orderId={id}
+      />
+      <SendOTP
+        showModal={showSendOTPModal}
+        handleCloseModal={handleCloseSendOTPModal}
+        orderId={id}
+        fromEmail={itemDetails.from}
+      />
       {/* <ConfirmDelivery
         showModal={showConfirmDeliveryModal}
         handleCloseModal={handleCloseConfirmDeliveryModal}

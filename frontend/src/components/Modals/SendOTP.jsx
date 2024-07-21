@@ -7,12 +7,12 @@ import { PostApiCall } from "../../utils/Axios";
 import { toast } from "react-toastify";
 import Spinner from "react-bootstrap/Spinner";
 
-const SendOTP = ({ showModal, handleCloseModal, fromEmail }) => {
+const SendOTP = ({ showModal, handleCloseModal, orderId }) => {
   const [OTP, setOTP] = useState("");
   const [loading, setLoading] = useState(false);
 
   const confirmOTP = async () => {
-    // const response = await PostApiCall(`/orders/confirmTransfer/${fromEmail}`, OTP);
+    // const response = await PostApiCall(`/transfer/sendOtp/${orderId}`, OTP);
     // if (response.success) {
     toast.success("Validation Confirmed");
     // setQrData(null);
@@ -23,15 +23,15 @@ const SendOTP = ({ showModal, handleCloseModal, fromEmail }) => {
   useEffect(() => {
     const sendOPTToBackend = async () => {
       setLoading(true);
-      // const response = await PostApiCall(`/orders/sendOTP/${fromEmail}`);
-      // if (response.success) {
-      //   setOTP(response.data);
-      //   toast.success("OTP Sent");
-      // }
+      const response = await PostApiCall(`api/transfer/sendOtp/${orderId}`, {});
+      console.log(response);
+      if (response.success) {
+        toast.success("OTP Sent");
+      }
       setLoading(false);
     };
-    sendOPTToBackend();
-  }, []);
+    if (showModal) sendOPTToBackend();
+  }, [showModal]);
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
