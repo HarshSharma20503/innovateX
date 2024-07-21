@@ -181,7 +181,6 @@ export const addOrder = AsyncHandler(async (req, res) => {
     }
   );
 
-  console.log("updateResult4: ", updateResult4);
 
   res.status(200).json(new ApiResponse(200, { qrCode }, "Order Successfully registered"));
 });
