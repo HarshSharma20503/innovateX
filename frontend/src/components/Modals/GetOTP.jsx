@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
+import { GetApiCall, PostApiCall } from "../../utils/Axios";
 
-const GetOTP = ({ showModal, handleCloseModal, fromEmail }) => {
-  const [QTP, setQTP] = useState("1234");
+const GetOTP = ({ showModal, handleCloseModal, orderId }) => {
+  const [QTP, setQTP] = useState("");
 
   const handleConfirm = async () => {
     // const response = await PostApiCall(`/orders/confirmTransfer/${fromEmail}`, formData);
     // if (response.success) {
     toast.success("Validation Confirmed");
-    setQrData(null);
+    // setQrData(null);
     handleCloseModal();
     // }
   };
@@ -18,13 +19,13 @@ const GetOTP = ({ showModal, handleCloseModal, fromEmail }) => {
   useEffect(() => {
     // Fetch item details from backend
     const getOTPFromBackend = async () => {
-      // const response = await GetApiCall(`/orders/getOrder/${id}`);
+      const response = await GetApiCall(`api/transfer/getOtp/${orderId}`);
       // if (response.success) {
       //   setQTP(response.data);
       // }
     };
-    getOTPFromBackend();
-  }, []);
+    if (showModal) getOTPFromBackend();
+  }, [showModal]);
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
