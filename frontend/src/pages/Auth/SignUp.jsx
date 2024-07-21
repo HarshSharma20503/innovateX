@@ -61,7 +61,7 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="container h-75 d-flex justify-content-center align-content-center">
+      <div className="container h-75 d-flex justify-content-center align-content-center" style={{ minHeight: "80vh" }}>
         <form className="d-flex flex-column justify-content-center align-content-center">
           <h3 className="text-white w-100 text-center">Sign Up</h3>
           <div className="mb-3">

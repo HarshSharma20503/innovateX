@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../config/connectCloudinary.js";
 
 export const addOrder = AsyncHandler(async (req, res) => {
-
+  console.log("******* inside the addOrder function ********");
   //   {
   //     "identifiers": {
   //         "rfid": "3712",
@@ -32,13 +32,13 @@ export const addOrder = AsyncHandler(async (req, res) => {
   //     "tracking": []
   // }
 
-
   const user = req.user;
   if (!user || user.userType !== "Seller") {
     throw new ApiError(400, "Invalid Operation for current user");
   }
 
-  const { itemName, sendTo, imgUrl } = req.body;
+  const { itemName, sendTo, imageUrl } = req.body;
+  let imgUrl = imageUrl;
 
   if (!itemName || !sendTo || !imgUrl) {
     throw new ApiError(400, "All fields are required");
@@ -49,9 +49,10 @@ export const addOrder = AsyncHandler(async (req, res) => {
     throw new ApiError(400, "Reciever not found");
   }
 
+  console.log("recieverUser: ", recieverUser);
+
   // console.log(recieverUser._id);
   const track = [{ id: "669baf564f903c7d64c4161c" }, { id: "669baf994f903c7d64c4161d" }];
-
 
   let order = await Order.create({
     itemName,
@@ -66,61 +67,72 @@ export const addOrder = AsyncHandler(async (req, res) => {
     throw new ApiError(500, "Failed to create order");
   }
 
+  console.log("Created order: ", order);
+
   // Create a tsx hash
   const nftMint = {
-    "identifiers": {
-      "rfid": "3712",
-      "qr": "1002"
+    identifiers: {
+      rfid: "3712",
+      qr: "1002",
     },
-    "ownership": {
-      "current_owner": user._id,
-      "previous_owners": [],
-      "location": "warehouse",
-      "timestamp": "2024-07-20T10:00:00Z"
+    ownership: {
+      current_owner: user._id,
+      previous_owners: [],
+      location: "warehouse",
+      timestamp: "2024-07-20T10:00:00Z",
     },
-    "data": {
-      "item": itemName,
-      "seller": user.name,
-      "buyer": recieverUser.email,
-      "source": "mumbai",
-      "destination": "delhi"
+    data: {
+      item: itemName,
+      seller: user.name,
+      buyer: recieverUser.email,
+      source: "mumbai",
+      destination: "delhi",
     },
-    "status": {
-      "delivered": false,
-      "paid": false
+    status: {
+      delivered: false,
+      paid: false,
     },
-    "tracking": []
+    tracking: [],
   };
 
   const url = process.env.GO_URL;
 
   function randomStr(len, arr) {
-    let ans = '';
+    let ans = "";
     for (let i = len; i > 0; i--) {
-      ans +=
-        arr[(Math.floor(Math.random() * arr.length))];
+      ans += arr[Math.floor(Math.random() * arr.length)];
     }
     return ans;
   }
 
-  const generatedId = randomStr(10, '1234567890abcdef');
+  const generatedId = randomStr(10, "1234567890abcdef");
+
+  console.log("generatedId: ", generatedId);
+
   const response = await fetch(`${url}/create/${generatedId}`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/json'
+      "content-type": "application/json",
     },
-    body: JSON.stringify(nftMint)
-  })
+    body: JSON.stringify(nftMint),
+  });
 
   const resp = await response.json();
 
+  console.log("Minted NFT: ", resp);
+
   const txnHash = resp.txn_hash;
 
+  console.log("txnHash: ", txnHash);
+
   // put txnHash in order database
-  await Order.updateOne({ _id: order['_id'] }, {
-    txnHash: txnHash,
-    orderId: generatedId
-  })
+  await Order.updateOne(
+    { _id: order["_id"] },
+    {
+      txnHash: txnHash,
+      orderId: generatedId,
+    }
+  );
 
   //
   const updateResult1 = await User.updateOne(
@@ -131,6 +143,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
       },
     }
   );
+  console.log("updateResult1: ", updateResult1);
   const updateResult2 = await User.updateOne(
     { _id: recieverUser._id },
     {
@@ -139,6 +152,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
       },
     }
   );
+  console.log("updateResult2: ", updateResult2);
   const updateResult3 = await User.updateOne(
     { _id: "669baf564f903c7d64c4161c" },
     {
@@ -147,6 +161,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
       },
     }
   );
+  console.log("updateResult3: ", updateResult3);
   const updateResult4 = await User.updateOne(
     { _id: "669baf994f903c7d64c4161d" },
     {
@@ -155,16 +170,23 @@ export const addOrder = AsyncHandler(async (req, res) => {
       },
     }
   );
+
+  console.log("updateResult4: ", updateResult4);
+
   res.status(200).json(new ApiResponse(200, {}, "Order Successfully registered"));
 });
 
 export const uploadPic = AsyncHandler(async (req, res) => {
+  console.log("******* inside the upload Pic function ********");
   const LocalPath = req.files?.picture[0]?.path;
+  console.log("LocalPath: ", LocalPath);
 
   if (!LocalPath) {
-    throw new ApiError(400, "Avatar file is required");
+    throw new ApiError(400, "Picture file is required");
   }
   const picture = await uploadOnCloudinary(LocalPath);
+
+  console.log("Picture: ", picture);
   if (!picture) {
     throw new ApiError(500, "Error uploading picture");
   }
@@ -191,7 +213,7 @@ export const showAll = AsyncHandler(async (req, res) => {
       data.push(temp);
     })
   );
-  res.status(200).json(new ApiResponse(200, ...data, "orders successfully fetched"));
+  res.status(200).json(new ApiResponse(200, [...data], "orders successfully fetched"));
 });
 
 export const orderDetails = AsyncHandler(async (req, res) => {
@@ -209,7 +231,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   const url = process.env.GO_URL;
   const response = await fetch(`${url}/get/${txnHash}`, {
-    method: 'GET'
+    method: "GET",
   });
 
   const orderDetails = await response.json();
@@ -225,17 +247,16 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   const sender = await User.findOne({ _id: order["from"] });
   const reciever = await User.findOne({ _id: order["to"] });
   let orderInfo = {
-    "itemName": order["itemName"],
-    "from": sender["email"],
-    "to": reciever["email"],
-    "imgUrl": order["imgUrl"]
+    itemName: order["itemName"],
+    from: sender["email"],
+    to: reciever["email"],
+    imgUrl: order["imgUrl"],
   };
 
   // track record
   // trackRecord.push({
   //   "id":
   // })
-
 
   res.status(200).json(new ApiResponse(200, { orderDetails }, "Order Details successfully fetched"));
 });
