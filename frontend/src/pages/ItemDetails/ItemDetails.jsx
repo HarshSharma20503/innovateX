@@ -21,7 +21,12 @@ const ItemDetails = () => {
   // const [showConfirmDeliveryModal, setShowConfirmDeliveryModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [qrData, setQrData] = useState(null);
-  const [itemDetails, setItemDetails] = useState();
+  const [itemDetails, setItemDetails] = useState({
+    itemName: "",
+    from: "",
+    to: "",
+    imgUrl: "",
+  });
   const [orderStatus, setOrderStatus] = useState();
   const [trackRecord, setTrackRecord] = useState([]);
 
