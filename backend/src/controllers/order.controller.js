@@ -284,7 +284,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   console.log("previous_owners: ", previous_owners);
   console.log("current_owner: ", current_owner);
   console.log("previous_owners.length: ", previous_owners.length != 0);
-  let flag = previous_owners.length != 0 && previous_owners.find((x) => { x.toString() == sender["_id"].toString() }) != undefined;
+  let flag = previous_owners.length != 0;
   trackRecord.push({
     id: sender["_id"],
     name: sender["name"],
