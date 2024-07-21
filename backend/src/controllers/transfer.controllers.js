@@ -93,12 +93,12 @@ export const confirmTransaction = AsyncHandler(async (req, res) => {
     if (!order) {
         throw new ApiError(400, "Invalid Action");
     }
-    const txnHash = order["txnHash"];
+    let txnHash = order["txnHash"];
     console.log("order: ", order);
     console.log("txnHash: ", txnHash);
 
     const url = process.env.GO_URL;
-    const response = await fetch(`${url}/get/${txnHash}`, {
+    let response = await fetch(`${url}/get/${txnHash}`, {
         method: "GET",
     });
 
@@ -113,5 +113,40 @@ export const confirmTransaction = AsyncHandler(async (req, res) => {
         handler: orderDetails.current_owner,
         timestamp: "2024-07-20T21:00:00Z"
     })
+    orderDetails.current_owner = user._id;
 
+    if (orderDetails.previous_owners.length == order['track'].length + 1) {
+        orderDetails.status.delivered = true;
+        orderDetails.status.paid = true;
+        await Order.updateOne(
+            { _id: order["_id"] },
+            {
+                status: 'delivered',
+            }
+        );
+    }
+
+    response = await fetch(`${url}/create/${order["orderId"]}`, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+        },
+        body: JSON.stringify(nftMint),
+    });
+
+    const resp = await response.json();
+
+    console.log("Minted NFT: ", resp);
+
+    txnHash = resp.txn_hash;
+
+    console.log("txnHash: ", txnHash);
+
+    await Order.updateOne(
+        { _id: order["_id"] },
+        {
+            txnHash: txnHash,
+        }
+    );
+    res.status(200).json(new ApiResponse(200, {}, "Step confirmed successfuly"))
 })
