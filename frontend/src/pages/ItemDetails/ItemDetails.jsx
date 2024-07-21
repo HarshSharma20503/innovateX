@@ -6,11 +6,16 @@ import Button from "react-bootstrap/esm/Button";
 import ScanQR from "../../components/Modals/ScanQR";
 import Spinner from "react-bootstrap/esm/Spinner";
 import GetOTP from "../../components/Modals/GetOTP";
+import SendOTP from "../../components/Modals/SendOTP";
+import { GetApiCall } from "../../utils/Axios";
+// import ConfirmDelivery from "../../components/Modals/ConfirmDelivery";
 
 const ItemDetails = () => {
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   const [showQTPModal, setShowOTPModal] = useState(false);
+  const [showSendOTPModal, setShowSendOTPModal] = useState(false);
+  // const [showConfirmDeliveryModal, setShowConfirmDeliveryModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [qrData, setQrData] = useState(null);
   const [itemDetails, setItemDetails] = useState({
@@ -38,10 +43,17 @@ const ItemDetails = () => {
   const handleShowOTPModal = () => setShowOTPModal(true);
   const handleCloseOTPModal = () => setShowOTPModal(false);
 
+  const handleShowSendOTPModal = () => setShowSendOTPModal(true);
+  const handleCloseSendOTPModal = () => setShowSendOTPModal(false);
+
+  // const handleShowConfirmDeliveryModal = () => setShowConfirmDeliveryModal(true);
+  // const handleCloseConfirmDeliveryModal = () => setShowConfirmDeliveryModal(false);
+
   useEffect(() => {
     // Fetch item details from backend
     const getItemDetails = async () => {
-      // const response = await GetApiCall(`/orders/getOrder/${id}`);
+      const response = await GetApiCall(`api/order/orderDetails/${id}`);
+      console.log(response);
       // if (response.success) {
       //   setItemDetails(response.data);
       // }
@@ -60,12 +72,13 @@ const ItemDetails = () => {
         fromEmail={itemDetails.from}
         setQrData={setQrData}
       />
-      <GetOTP
-        showModal={showQTPModal}
-        handleCloseModal={handleCloseOTPModal}
+      <GetOTP showModal={showQTPModal} handleCloseModal={handleCloseOTPModal} fromEmail={itemDetails.from} />
+      <SendOTP showModal={showSendOTPModal} handleCloseModal={handleCloseSendOTPModal} fromEmail={itemDetails.from} />
+      {/* <ConfirmDelivery
+        showModal={showConfirmDeliveryModal}
+        handleCloseModal={handleCloseConfirmDeliveryModal}
         fromEmail={itemDetails.from}
-        setQrData={setQrData}
-      />
+      /> */}
       <div className="container my-4">
         {/* Items Details */}
         <Card className="mb-4" style={{ borderRadius: "15px", backgroundColor: "#f8f9fa" }}>
@@ -154,14 +167,14 @@ const ItemDetails = () => {
                     <tr>
                       <td>Confirm Reciever Identity</td>
                       <td>
-                        <Button variant="primary">Send Otp</Button>
+                        <Button variant="primary" onClick={handleShowSendOTPModal}>
+                          Send Otp
+                        </Button>
                       </td>
                     </tr>
                     <tr>
-                      <td>Confirm item sent</td>
-                      <td>
-                        <Button variant="primary">Confirm</Button>
-                      </td>
+                      <td>Delivery Status</td>
+                      <td>pending</td>
                     </tr>
                   </tbody>
                 </Table>
