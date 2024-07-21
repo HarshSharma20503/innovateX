@@ -108,7 +108,7 @@ const ItemDetails = () => {
                     <th>Details</th>
                   </tr>
                 </thead>
-                {/* <tbody>
+                <tbody>
                   <tr>
                     <td>Iteam Name</td>
                     <td>{itemDetails.itemName}</td>
@@ -127,7 +127,7 @@ const ItemDetails = () => {
                       <img src={itemDetails.imgUrl} className="img-fluid" />
                     </td>
                   </tr>
-                </tbody> */}
+                </tbody>
               </Table>
             </Card.Body>
           )}
@@ -181,7 +181,7 @@ const ItemDetails = () => {
                     <Card.Header as="h6">Give Item To</Card.Header>
 
                     <Table striped bordered hover responsive="md">
-                      {/* <tbody>
+                      <tbody>
                         <tr>
                           <td>From</td>
                           <td>{itemDetails.from}</td>
@@ -202,7 +202,7 @@ const ItemDetails = () => {
                           <td>Delivery Status</td>
                           <td>pending</td>
                         </tr>
-                      </tbody> */}
+                      </tbody>
                     </Table>
                   </Card>
                 )}
