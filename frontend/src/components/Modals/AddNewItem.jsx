@@ -13,7 +13,7 @@ function AddNewItem({ show, handleClose }) {
     sendTo: "",
   });
   const [loading, setLoading] = useState(false);
-  const [submited, setSubmited] = useState(false);
+  const [qr, setQr] = useState(null);
 
   const handleFileChange = async (e) => {
     const data = new FormData();
@@ -55,10 +55,11 @@ function AddNewItem({ show, handleClose }) {
       return;
     }
     const response = await PostApiCall("api/order/addOrder", formData);
+    console.log(response);
     setLoading(false);
     if (response.success) {
       toast.success("Item added successfully");
-
+      setQr(response.data.qrCode);
       // handleClose();
     }
   };
