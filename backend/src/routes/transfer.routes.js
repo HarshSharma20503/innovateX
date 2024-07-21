@@ -7,7 +7,7 @@ const router = Router();
 router.route('/sendOtp/:orderId').post(validateToken, sendOtp);
 router.route('/verifyOtp/:orderId').post(validateToken, verifyOtp);
 router.route('/getOtp/:orderId').get(validateToken, getOtp);
-router.route('/confirm/:orderId').get(validateToken, confirmTransaction);
+router.route('/confirm/:orderId').post(validateToken, confirmTransaction);
 
 
 export default router
