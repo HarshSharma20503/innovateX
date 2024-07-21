@@ -12,12 +12,15 @@ const SendOTP = ({ showModal, handleCloseModal, orderId }) => {
   const [loading, setLoading] = useState(false);
 
   const confirmOTP = async () => {
-    // const response = await PostApiCall(`/transfer/sendOtp/${orderId}`, OTP);
-    // if (response.success) {
-    toast.success("Validation Confirmed");
-    // setQrData(null);
-    // handleCloseModal();
-    // }
+    const response = await PostApiCall(`api/transfer/verifyOtp/${orderId}`, { otp: OTP });
+    console.log(response);
+    if (response.success) {
+      toast.success("Validation Confirmed");
+      // setQrData(null);
+      handleCloseModal();
+    } else {
+      toast.error(response.message);
+    }
   };
 
   useEffect(() => {

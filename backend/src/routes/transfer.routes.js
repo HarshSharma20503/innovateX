@@ -4,10 +4,9 @@ import { confirmTransaction, getOtp, sendOtp, verifyOtp } from "../controllers/t
 // Create a new router instance
 const router = Router();
 
-router.route('/sendOtp/:orderId').post(validateToken, sendOtp);
-router.route('/verifyOtp/:orderId').post(validateToken, verifyOtp);
-router.route('/getOtp/:orderId').get(validateToken, getOtp);
-router.route('/confirm/:orderId').post(validateToken, confirmTransaction);
+router.route("/sendOtp/:orderId").post(validateToken, sendOtp);
+router.route("/verifyOtp/:orderId").post(validateToken, verifyOtp);
+router.route("/getOtp/:orderId").get(validateToken, getOtp);
+router.route("/confirm/:orderId").post(validateToken, confirmTransaction);
 
-
-export default router
+export default router;
