@@ -53,7 +53,7 @@ export const addOrder = AsyncHandler(async (req, res) => {
   console.log("recieverUser: ", recieverUser);
 
   // console.log(recieverUser._id);
-  const track = [{ id: "669baf564f903c7d64c4161c" }, { id: "669baf994f903c7d64c4161d" }];
+  const track = [{ id: "669c7e964f903c7d64c41623" }];
 
   let order = await Order.create({
     itemName,
@@ -306,7 +306,11 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   let item = fullTrack[0];
   let middle = await User.findOne({ _id: item.id });
   console.log("middle: ", middle);
-  flag = previous_owners.length != 0 && previous_owners.find((x) => { return x.toString() == item.id.toString() }) != undefined;
+  flag =
+    previous_owners.length != 0 &&
+    previous_owners.find((x) => {
+      return x.toString() == item.id.toString();
+    }) != undefined;
   trackRecord.push({
     id: item.id,
     name: middle["name"],
@@ -316,18 +320,22 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   });
   previous_flag = flag;
 
-  item = fullTrack[1];
-  middle = await User.findOne({ _id: item.id });
-  console.log("middle: ", middle);
-  flag = previous_owners.length != 0 && previous_owners.find((x) => { return x.toString() == item.id.toString() }) != undefined;
-  trackRecord.push({
-    id: item.id,
-    name: middle["name"],
-    email: middle["email"],
-    send_status: flag,
-    recieve_status: previous_flag,
-  });
-  previous_flag = flag;
+  // item = fullTrack[1];
+  // middle = await User.findOne({ _id: item.id });
+  // console.log("middle: ", middle);
+  // flag =
+  //   previous_owners.length != 0 &&
+  //   previous_owners.find((x) => {
+  //     return x.toString() == item.id.toString();
+  //   }) != undefined;
+  // trackRecord.push({
+  //   id: item.id,
+  //   name: middle["name"],
+  //   email: middle["email"],
+  //   send_status: flag,
+  //   recieve_status: previous_flag,
+  // });
+  // previous_flag = flag;
 
   console.log("trackRecord: ", trackRecord);
   trackRecord.push({
