@@ -284,7 +284,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   console.log("previous_owners: ", previous_owners);
   console.log("current_owner: ", current_owner);
   console.log("previous_owners.length: ", previous_owners.length != 0);
-  let flag = previous_owners.length != 0 && previous_owners.find((x) => x == sender["_id"]) != undefined;
+  let flag = previous_owners.length != 0 && previous_owners.find((x) => { x.toString() == sender["_id"].toString() }) != undefined;
   trackRecord.push({
     id: sender["_id"],
     name: sender["name"],
@@ -315,7 +315,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
   let item = fullTrack[0];
   let middle = await User.findOne({ _id: item.id });
   console.log("middle: ", middle);
-  flag = previous_owners.length != 0 && previous_owners.find((x) => x == item.id) != undefined;
+  flag = previous_owners.length != 0 && previous_owners.find((x) => { return x.toString() == item.id.toString() }) != undefined;
   trackRecord.push({
     id: item.id,
     name: middle["name"],
@@ -324,10 +324,11 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     recieve_status: previous_flag,
   });
   previous_flag = flag;
+
   item = fullTrack[1];
   middle = await User.findOne({ _id: item.id });
   console.log("middle: ", middle);
-  flag = previous_owners.length != 0 && previous_owners.find((x) => x == item.id) != undefined;
+  flag = previous_owners.length != 0 && previous_owners.find((x) => { return x.toString() == item.id.toString() }) != undefined;
   trackRecord.push({
     id: item.id,
     name: middle["name"],
