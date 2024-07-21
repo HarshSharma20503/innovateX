@@ -213,11 +213,7 @@ export const showAll = AsyncHandler(async (req, res) => {
       data.push(temp);
     })
   );
-<<<<<<< HEAD
-  res.status(200).json(new ApiResponse(200, data, "orders successfully fetched"));
-=======
   res.status(200).json(new ApiResponse(200, [...data], "orders successfully fetched"));
->>>>>>> 965e38d48acee1eee0689af5b30eb5de1f4ad95e
 });
 
 export const orderDetails = AsyncHandler(async (req, res) => {
@@ -246,24 +242,16 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   let trackRecord = [];
   let order_user_status = {};
-  let orderInfo
+  let orderInfo = {};
 
   // basic order info
   const sender = await User.findOne({ _id: order["from"] });
   const reciever = await User.findOne({ _id: order["to"] });
-<<<<<<< HEAD
   orderInfo = {
-    "itemName": order["itemName"],
-    "from": sender["email"],
-    "to": reciever["email"],
-    "imgUrl": order["imgUrl"]
-=======
-  let orderInfo = {
     itemName: order["itemName"],
     from: sender["email"],
     to: reciever["email"],
     imgUrl: order["imgUrl"],
->>>>>>> 965e38d48acee1eee0689af5b30eb5de1f4ad95e
   };
 
   // track record
@@ -301,7 +289,6 @@ export const orderDetails = AsyncHandler(async (req, res) => {
     "recieve_status": current_owner === reciever["_id"]
   })
 
-<<<<<<< HEAD
   // order_user_status
   const order_user_track = trackRecord.find(x => x.id === user._id);
   order_user_status = {
@@ -311,7 +298,3 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   res.status(200).json(new ApiResponse(200, { orderInfo, order_user_status, trackRecord }, "Order Details successfully fetched"));
 });
-=======
-  res.status(200).json(new ApiResponse(200, { orderDetails }, "Order Details successfully fetched"));
-});
->>>>>>> 965e38d48acee1eee0689af5b30eb5de1f4ad95e
