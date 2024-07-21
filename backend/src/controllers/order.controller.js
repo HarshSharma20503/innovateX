@@ -348,7 +348,7 @@ export const orderDetails = AsyncHandler(async (req, res) => {
 
   console.log("track: ", trackRecord);
   // order_user_status
-  const order_user_track = trackRecord.find((x) => x.id === user._id);
+  const order_user_track = trackRecord.find((x) => x.id == user._id);
   order_user_status = {
     sent: order_user_track?.send_status ? order_user_track.send_status : false,
     recieved: order_user_track?.recieve_status ? order_user_track.recieve_status : false,
