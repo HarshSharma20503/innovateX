@@ -25,6 +25,8 @@ const ItemDetails = () => {
     imgUrl: "https://hentai.tv/wp-content/uploads/2024/07/rc1269302package.jpg",
     // imgUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOGEX8nxBnr3oM6TRZ4qiXyIRYUH2iiedLzA&s",
   });
+  const [orderStatus, setOrderStatus] = useState();
+  const [trackRecord, setTrackRecord] = useState([]);
 
   const handleScan = (data) => {
     if (data) {
@@ -54,9 +56,11 @@ const ItemDetails = () => {
     const getItemDetails = async () => {
       const response = await GetApiCall(`api/order/orderDetails/${id}`);
       console.log(response);
-      // if (response.success) {
-      //   setItemDetails(response.data);
-      // }
+      if (response.success) {
+        setItemDetails(response.data.orderInfo);
+        setOrderStatus(response.data.order_user_status);
+        setTrackRecord(response.data.trackRecord);
+      }
     };
     getItemDetails();
   }, []);
@@ -190,18 +194,17 @@ const ItemDetails = () => {
             <Table striped bordered hover>
               <thead>
                 <tr>
-                  <th>From</th>
-                  <th>To</th>
+                  <th>Persons</th>
                 </tr>
               </thead>
               <tbody>
+                {trackRecord.map((record, index) => (
+                  <tr key={record.id}>
+                    <td>{record.itemName}</td>
+                  </tr>
+                ))}
                 <tr>
                   <td>Attribute 1</td>
-                  <td>Detail 1</td>
-                </tr>
-                <tr>
-                  <td>Attribute 2</td>
-                  <td>Detail 2</td>
                 </tr>
               </tbody>
             </Table>
