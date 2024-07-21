@@ -19,7 +19,8 @@ function AddNewItem({ show, handleClose }) {
     data.append("picture", e.target.files[0]);
     console.log("Data: ", data);
     toast.info("Uploading your pic please wait upload confirmation..");
-    const response = await PostApiCall("/orders/uploadPicture", data);
+    const response = await PostApiCall("api/order/uploadPicture", data);
+    console.log(response);
     if (response.success) {
       toast.success("Pic uploaded successfully");
       console.log("Pic url:", response.data);
@@ -27,7 +28,7 @@ function AddNewItem({ show, handleClose }) {
       setFormData(() => {
         return {
           ...formData,
-          picture: response.data.url,
+          imageUrl: response.data.url,
         };
       });
     }
@@ -46,13 +47,13 @@ function AddNewItem({ show, handleClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-
-    if (!formData.itemName || !formData.quantity || !formData.imageUrl || !formData.sendTo) {
+    console.log(formData);
+    if (!formData.itemName || !formData.imageUrl || !formData.sendTo) {
       toast.error("Please fill all fields and select an image");
       setLoading(false);
       return;
     }
-    const response = await PostApiCall("/orders/addOrder", formData);
+    const response = await PostApiCall("api/order/addOrder", formData);
     if (response.success) {
       toast.success("Item added successfully");
       handleClose();

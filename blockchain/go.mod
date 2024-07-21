@@ -1,11 +1,12 @@
 module github.com/HarshSharma20503/innovateX
 
-go 1.21.5
+go 1.18
 
 require (
 	github.com/diamcircle/go v0.1.1
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/render v1.0.3
 	github.com/ipfs/go-ipfs-api v0.7.0
 	github.com/joho/godotenv v1.5.1
@@ -19,7 +20,6 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect
 	github.com/diamcircle/go-xdr v0.1.0 // indirect
-	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/gorilla/schema v1.2.1 // indirect
 	github.com/ipfs/boxo v0.12.0 // indirect
